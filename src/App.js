@@ -9,28 +9,28 @@ class App extends Component {
         super(props);
 
         this.state = {
-            data: [
-                {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
-                {name: 'Page B', uv: 3000, pv: 1398, amt: 2210},
-                {name: 'Page C', uv: 2000, pv: 9800, amt: 2290},
-                {name: 'Page D', uv: 2780, pv: 3908, amt: 2000},
-                {name: 'Page E', uv: 1890, pv: 4800, amt: 2181},
-                {name: 'Page F', uv: 2390, pv: 3800, amt: 2500},
-                {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
-            ],
-            piedata: [
-                {name: 'Group A', value: 400},
-                {name: 'Group B', value: 300},
-                {name: 'Group C', value: 300},
-                {name: 'Group D', value: 200},
-                {name: 'Group E', value: 278},
-                {name: 'Group F', value: 189},
-            ],
+            data: [],
         };
+
+        let self = this;
+
+        fetch('http://localhost:3001/get', {
+            method: 'GET'
+        }).then(function(response) {
+              if (response.status >= 400) {
+                  throw new Error('Bad response from server')
+              }   
+              return response.json();
+        }).then(function(data) {
+              console.log(data);
+              self.setState({ data: data});
+        }).catch(function(error) {
+              console.log(error);
+        }); 
     }
 
     render() {
-        const { data, piedata } = this.state;
+        const { data } = this.state;
 
         return (
             <div className="App">
@@ -40,7 +40,7 @@ class App extends Component {
                             <tr>
                                 <td><ChartLine data={data} /></td>
                                 <td><ChartBar data={data} /></td>
-                                <td><ChartPie data={piedata} /></td>
+                                <td><ChartPie data={data} /></td>
                             </tr>
                         </tbody>
                     </table>
